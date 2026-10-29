@@ -133,6 +133,9 @@ import KsRadioGroup from "./components/Form/KsRadio/KsRadioGroup.vue"
 import KsRow from "./components/Basic/KsRow/KsRow.vue"
 import KsScrollbar from "./components/Basic/KsScrollbar.vue"
 import KsSegmented from "./components/Data/KsSegmented.vue"
+import KsChangeReview from "./components/Data/KsChangeReview.vue"
+export type {KsChangeReviewTone, KsChangeReviewTile, KsChangeReviewSegment, KsChangeReviewTab} from "./components/Data/KsChangeReview.vue"
+export {KS_CHANGE_REVIEW_TONES} from "./components/Data/KsChangeReview.vue"
 import KsSelect from "./components/Form/KsSelect/KsSelect.vue"
 import KsSideBar from "./components/Navigation/KsSideBar/KsSideBar.vue"
 import KsSideBarItem from "./components/Navigation/KsSideBar/KsSideBarItem.vue"
@@ -371,6 +374,7 @@ const components: Record<string, Component> = {
     KsScrollbar,
     KsSearch,
     KsSegmented,
+    KsChangeReview,
     KsSelect,
     KsSideBar,
     KsSideBarItem,
@@ -484,6 +488,7 @@ export {
     KsScrollbar,
     KsSearch,
     KsSegmented,
+    KsChangeReview,
     KsSelect,
     KsSideBar,
     KsSideBarItem,
@@ -631,6 +636,7 @@ declare module "vue" {
         KsScrollbar: typeof KsScrollbar
         KsSearch: typeof KsSearch
         KsSegmented: typeof KsSegmented
+        KsChangeReview: typeof KsChangeReview
         KsSelect: typeof KsSelect
         KsSideBar: typeof KsSideBar
         KsSideBarItem: typeof KsSideBarItem
