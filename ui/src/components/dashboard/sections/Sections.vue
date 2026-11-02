@@ -109,6 +109,8 @@
     const chartsComponents = new Map<string, {
         refresh(): void;
         exportParameters?(): {pageNumber?: number; pageSize?: number; filters?: QueryFilter[]};
+        /** A chart whose rendered dataset follows a tab exports that tab's chart, not the declared one. */
+        exportChart?(): Chart;
     }>()
 
     function registerChartComponent(el: Element | ComponentPublicInstance | null, chartId: string) {
@@ -199,9 +201,10 @@
     })
 
     async function exportChart(chart: Chart) {
-        const {filters: chartFilters = [], ...pagination} = chartsComponents.get(chart.id)?.exportParameters?.() ?? {}
+        const component = chartsComponents.get(chart.id)
+        const {filters: chartFilters = [], ...pagination} = component?.exportParameters?.() ?? {}
 
-        await dashboardStore.export(props.dashboard, chart, {
+        await dashboardStore.export(props.dashboard, component?.exportChart?.() ?? chart, {
             ...pagination,
             filters: filters.value.concat(decodeSearchParams(route.query) as QueryFilter[] ?? [], chartFilters),
         })
