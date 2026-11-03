@@ -35,10 +35,28 @@ jobs:
       embed-plugins-schema-bundle: true
       sbom: true
 
+  check-green-commit:
+    name: Check green commit
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+    outputs:
+      already-green: ${{ steps.check.outputs.already-green }}
+    steps:
+      - id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          COUNT=$(gh api "repos/${{ github.repository }}/actions/runs?head_sha=${{ github.sha }}&status=success&per_page=100" \
+            --jq '[.workflow_runs[] | select(.name == "Main Workflow")] | length')
+          echo "Successful 'Main Workflow' runs on ${{ github.sha }}: $COUNT"
+          echo "already-green=$([ "$COUNT" -gt 0 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+
   backend-tests:
     name: Backend tests
     uses: kestra-io/actions/.github/workflows/kestra-oss-backend-tests.yml@main
-    if: ${{ github.event.inputs.skip-test == 'false' || github.event.inputs.skip-test == '' }}
+    needs: [check-green-commit]
+    if: ${{ needs.check-green-commit.outputs.already-green != 'true' && (github.event.inputs.skip-test == 'false' || github.event.inputs.skip-test == '') }}
     secrets:
       GITHUB_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
